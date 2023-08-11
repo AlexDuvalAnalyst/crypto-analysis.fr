@@ -1,10 +1,12 @@
+# script a executer automatiquement chaque jour pour recuperer les dernieres donnees
+
 library(crypto2)
 library(lubridate)
 library(tidyverse)
 library(coinmarketcapr)
 
 # recuperation des infos et des 20 premieres crypto
-setup(api_key = "19d11e6a-f90f-4d45-8ec5-9abd9a1115f9")
+setup(api_key = "") # il faut ajouter votre propre key ici
 
 # recuperation du classement
 ranklist <- as.data.frame(get_crypto_listings(currency = "USD", latest = TRUE))[,c(1,2,3,11)]
