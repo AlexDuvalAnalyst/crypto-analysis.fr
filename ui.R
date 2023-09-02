@@ -30,8 +30,7 @@ for(i in c(1:20)){
                    actionButton('exit",i,"','X',class = 'exit'),
                    div(class = 'graph',plotlyOutput('graph",i,"', height = '100%', width = '100%')),
                    div(class = 'graphbp',plotlyOutput('graphbp",i,"', height = '100%', width = '100%')),
-                   div(class = 'grapht',plotlyOutput('grapht",i,"', height = '100%', width = '100%')),
-                   tags$p(class = 'title_grapht', 'Weekly trend')
+                   div(class = 'card-text',uiOutput('trendtitle",i,"'),uiOutput('trendicon",i,"'))
                    )
                    ),",sep = "")
   }else{
@@ -39,7 +38,7 @@ for(i in c(1:20)){
                    actionButton('exit",i,"','X',class = 'exit'),
                    div(class = 'graph',plotlyOutput('graph",i,"', height = '100%', width = '100%')),
                    div(class = 'graphbp',plotlyOutput('graphbp",i,"', height = '100%', width = '100%')),
-                   div(class = 'grapht',plotlyOutput('grapht",i,"', height = '100%', width = '100%'))
+                   div(class = 'card-text',uiOutput('trendtitle",i,"'),uiOutput('trendicon",i,"'))
                    ))",sep = "")
   }
   code_div <- paste(code_div,ajout,sep = "")
@@ -49,8 +48,27 @@ code_app <- paste("fluidPage(useShinyjs(),
       
       theme = 'main.css',
       tags$script(src = 'https://kit.fontawesome.com/54af662477.js'),
-      tags$head(),
+      tags$head(tags$style(HTML('
+                  .shiny-output-error-validation {
+                    color: red;
+                    font-weight: bold;
+                    position:absolute;
+                    top:25vh;
+                    width:80vh;
+                    font-size:2em;
+                    background-color:rgba(255,255,255,0.7);
+                    border-radius:7px;
+                    box-shadow: 0 6px 4px 0 rgba(0,0,0,0.3);
+                    padding:20px;
+                    z-index:3000;
+                  }
+                  '))),
       tags$body(
+       tags$div(
+        tags$div(class='wave'),
+        tags$div(class='wave'),
+        tags$div(class='wave'),
+        ),
         tags$div(id = 'menu',class = 'menu', '',
                  tags$p(class = 'title_app', 'Crypto',br(),'analysis'),
                  tags$div(class = 'liste_crypto',
@@ -58,7 +76,7 @@ code_app <- paste("fluidPage(useShinyjs(),
                  )
                  ),
         ",code_div,",
-         tags$div(class = 'title',
+        tags$div(class = 'title',
                  tags$p(class = 'title_crypto','Top 10',br(),'crypto'),
                  tags$p(class = 'title_valeur','Price'),
                  tags$p(class = 'title_1mois','1 month trend'),

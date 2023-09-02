@@ -74,16 +74,16 @@ server <- function(input, output, session) {
                     trend1mois[trend1mois$Date == min(trend1mois$Date, na.rm = T),]$Mean)*100,2)
     if(t1m > 0.1){
       t1micon <- "fa-solid fa-arrow-trend-up fa-beat"
-      col1m = "green"
+      col1m = "#44f292"
       sign <- "+"
     }else{
       if(t1m < 0) {
         t1micon <- "fa-solid fa-arrow-trend-down fa-beat"
-        col1m = "red"
+        col1m = "#ff3b48"
         sign <- "-"
       }else{
         t1micon <- "fa-solid fa-equals fa-beat"
-        col1m = "grey"
+        col1m = "#49afe3"
         sign <- ""
       }
     }
@@ -92,16 +92,16 @@ server <- function(input, output, session) {
                     trend6mois[trend6mois$Date == min(trend6mois$Date, na.rm = T),]$Mean)*100,2)
     if(t6m > 0.1){
       t6micon <- "fa-solid fa-arrow-trend-up fa-beat"
-      col6m = "green"
+      col6m = "#44f292"
       sign <- "+"
     }else{
       if(t6m < 0){
         t6micon <- "fa-solid fa-arrow-trend-down fa-beat"
-        col6m = "red"
+        col6m = "#ff3b48"
         sign <- "-"
       }else{
         t6micon <- "fa-solid fa-equals fa-beat"
-        col6m = "grey"
+        col6m = "#49afe3"
         sign <- ""
       }
     }
@@ -110,16 +110,16 @@ server <- function(input, output, session) {
                     trend1an[trend1an$Date == min(trend1an$Date, na.rm = T),]$Mean)*100,2)
     if(t1a > 0.1){
       t1aicon <- "fa-solid fa-arrow-trend-up fa-beat"
-      col1a = "green"
+      col1a = "#44f292"
       sign <- "+"
     }else{
       if(t1a < 0){
         t1aicon <- "fa-solid fa-arrow-trend-down fa-beat"
-        col1a = "red"
+        col1a = "#ff3b48"
         sign <- "-"
       }else{
         t1aicon <- "fa-solid fa-equals fa-beat"
-        col1a = "grey"
+        col1a = "#49afe3"
         sign <- ""
       }
     }
@@ -130,13 +130,13 @@ server <- function(input, output, session) {
         tags$img(width = '30px',height = '30px', class = 'logo',src = '",logo,"'),
         tags$p(class = 'val_crypto','",paste(round(val,0),"$"),"'),
         tags$p(class = 'date_crypto','",date_max,"'),
-        tags$div(class = 'ic1', tags$i(class = '",t1micon,"', style = 'font-size:1.3em;background:rgba(161, 180, 181,0.5);border-radius:35px;padding:10px;
+        tags$div(class = 'ic1', tags$i(class = '",t1micon,"', style = 'font-size:1.3em;background:rgba(255, 255, 255,0.8);border-radius:35px;padding:10px;
         color:",col1m,";opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;')),
         tags$p(class = 't1m', '",paste(sign,abs(t1m),'%'),"'),
-        tags$div(class = 'ic2', tags$i(class = '",t6micon,"', style = 'font-size:1.3em;background:rgba(161, 180, 181,0.5);border-radius:35px;padding:10px;
+        tags$div(class = 'ic2', tags$i(class = '",t6micon,"', style = 'font-size:1.3em;background:rgba(255, 255, 255,0.8);border-radius:35px;padding:10px;
         color:",col6m,";opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;')),
         tags$p(class = 't6m', '",paste(sign,abs(t6m),'%'),"'),
-        tags$div(class = 'ic3', tags$i(class = '",t1aicon,"', style = 'font-size:1.3em;background:rgba(161, 180, 181,0.5);border-radius:35px;padding:10px;
+        tags$div(class = 'ic3', tags$i(class = '",t1aicon,"', style = 'font-size:1.3em;background:rgba(255, 255, 255,0.8);border-radius:35px;padding:10px;
         color:",col1a,";opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;')),
         tags$p(class = 't1a', '",paste(sign,abs(t1a),'%'),"'))
       })",sep = ""
@@ -171,11 +171,17 @@ server <- function(input, output, session) {
           boxp(",id,",dthist)
        }
       })
-      output$grapht",i," <- renderPlotly({
-        if(length(dthist[dthist$id == ",id,",]$Mean) > 10){
-          tplot(",id,",dthist)
-        }
-      })",sep = ""
+     output$trendtitle",i," <- renderUI(
+      if(length(dthist[dthist$id == ",id,",]$Mean) > 10){
+          trendtitle(",id,",dthist)
+       }
+      )
+     output$trendicon",i," <- renderUI(
+      if(length(dthist[dthist$id == ",id,",]$Mean) > 10){
+          trendlogo(",id,",dthist)
+       }
+      )
+  ",sep = ""
     )))
   }
   
@@ -188,22 +194,24 @@ server <- function(input, output, session) {
     
     
     p <- ggplot(bt, aes(x = Date, y = Mean))+
-      geom_area(size = 1, alpha = 0.08, fill = "gold") +
-      geom_line(size = 1, color = "#a83939",alpha = 0.7) +
-      geom_smooth(method = "loess", span = 0.18, size = 0.8)+
+      geom_area(size = 1, alpha = 0.08, fill = "#520606") +
+      geom_line(size = 1, color = "#ff4f4f",alpha = 0.7) +
+      geom_smooth(method = "loess", span = 0.18, size = 0.8, color = "#49afe3")+
       scale_x_date(date_labels="%Y/%m",
                    breaks = seq(min(bt$Date,na.rm = T),
                                 max(bt$Date, na.rm = T),length.out = 8))+
       scale_y_continuous(labels = unit_format(unit = "K", scale = 1e-3))+
       labs(y = "Weely Mean $", title = paste("Historical",name,"price $"))+
       theme_light()+
-      theme(plot.title = element_text(color = "black", hjust = 0.5, vjust = -7.5, size = 18,face = "bold"),
+      theme(plot.title = element_text(color = "white", hjust = 0.5, vjust = -7.5, size = 18,face = "bold"),
             axis.title.x = element_blank(),
-            axis.title = element_text(size = 15, color = "black", face = "bold"),
-            axis.text.x = element_text(size = 11,color = "black", face = "bold"),
-            axis.text.y = element_text(size = 12,color = "black", face = "bold"),
-            panel.background = element_rect(fill="#f9f6f0", linewidth=1),
-            plot.background = element_rect(fill = "#f9f6f0", color = "#f9f6f0"),)
+            axis.title = element_text(size = 15, color = "white", face = "bold"),
+            axis.text.x = element_text(size = 11,color = "white", face = "bold"),
+            axis.text.y = element_text(size = 12,color = "white", face = "bold"),
+            panel.background = element_rect(fill='transparent'),
+            plot.background = element_rect(fill = 'transparent', color = 'transparent'),
+            panel.grid.major = element_line(size = 0, color = "gray80"),
+            panel.grid.minor = element_line(size = 0, color = "gray90"))
     ggplotly(p)
   }
   
@@ -218,17 +226,17 @@ server <- function(input, output, session) {
       scale_x_discrete(labels = c("Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Oct","Nov","Dec"))+
       labs(y = "Price $", title = paste(name," value each month of the year",sep = ""), color = "")+
       theme_light()+
-      theme(plot.title = element_text(color = "black", hjust = 0.5, vjust = -7.5, size = 12,face = "bold"),
+      theme(plot.title = element_text(color = "white", hjust = 0.5, vjust = -7.5, size = 12,face = "bold"),
             axis.title.x = element_blank(),
-            axis.title = element_text(size = 12, color = "black", face = "bold"),
-            axis.text = element_text(size = 10,color = "black", face = "bold"),
+            axis.title = element_text(size = 12, color = "white", face = "bold"),
+            axis.text = element_text(size = 10,color = "white", face = "bold"),
             legend.position = "none",
-            panel.background = element_rect(fill="#f9f6f0", linewidth=1),
-            plot.background = element_rect(fill = "#f9f6f0", color = "#f9f6f0"))
+            panel.background = element_rect(fill='transparent'),
+            plot.background = element_rect(fill = 'transparent', color = 'transparent'))
     ggplotly(p)
   }
   
-  tplot <- function(id_cryp, dthist){
+  trendtitle <- function(id_cryp, dthist){
     
     name <- top_crypto[top_crypto$id == id_cryp,]$name
     
@@ -240,36 +248,48 @@ server <- function(input, output, session) {
     
     val <- round(((v2-v1)/v1)*100,1)
     if(val > 0 ){
-      col = "green"
-      pref = "+"
+      sign <- "+"
     }else{
       if(val < 0){
-        col = "red"
-        pref = ""
+        sign <- "-"
       }else{
-        col = "grey"
-        pref = ""
+        sign <- ""
       }
     }
-    name <- "bitcoin"
-    fig <- plot_ly(
-      value = val,
-      type = "indicator",
-      mode = "gauge+number",
-      number = list(font = list(size = 30, color = col),prefix = pref, suffix = "%"),
-      gauge = list(
-        axis = list(range = list(-100, 100), tickwidth = 1, tickcolor = "darkblue"),
-        bar = list(color = col),
-        bgcolor = "#f9f6f0",
-        borderwidth = 2,
-        bordercolor = "#f9f6f0")) 
-    fig <- fig %>%
-      layout(margin = list(l=50,r=50)
-      )
-    
-    fig
-    
+    text_return <- tags$p(class = 'trendtitle', paste('Weekly trend : ',val,'$',sep = ''))
+    return(text_return)
   }
+  
+  trendlogo <- function(id_cryp, dthist){
+    
+    name <- top_crypto[top_crypto$id == id_cryp,]$name
+    
+    br <- dthist[dthist$id == id_cryp,]
+    
+    dtt <- tail(br,2)
+    v2 <- dtt[2,6]
+    v1 <- dtt[1,6]
+    
+    val <- round(((v2-v1)/v1)*100,1)
+    if(val > 0 ){
+      trend_logo <- tags$i(class = "fa-solid fa-arrow-trend-up fa-beat", style = "font-size:15vw;
+           background:rgba(36, 47, 57,0);color:blue;position:absolute;bottom:8%;
+           left:21%;opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;")
+      
+    }else{
+      if(val < 0){
+        trend_logo <- tags$i(class = "fa-solid fa-arrow-trend-down fa-beat", style = "font-size:15vw;
+           background:rgba(36, 47, 57,0);color:blue;position:absolute;bottom:8%;
+           left:21%;opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;")
+      }else{
+        trend_logo <- tags$i(class = "fa-solid fa-equals fa-beat", style = "font-size:15vw;
+           background:rgba(36, 47, 57,0);color:blue;position:absolute;bottom:8%;
+           left:21%;opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;")
+      }
+    }
+    return(trend_logo)
+  }
+  
   fplot1 <- function(id_cryp, mois, mois6, annee){
     
     
@@ -279,14 +299,14 @@ server <- function(input, output, session) {
     t1m <- round(((trend1mois[trend1mois$Date == max(trend1mois$Date, na.rm = T),]$Mean - trend1mois[trend1mois$Date == min(trend1mois$Date, na.rm = T),]$Mean)/
                     trend1mois[trend1mois$Date == min(trend1mois$Date, na.rm = T),]$Mean)*100,2)
     if(t1m > 0.1){
-      col1m = "#0f9149"
+      col1m = "#1cd46e"
       colfill = "green"
     }else{
       if(t1m < 0) {
-        col1m = "#eb3440"
+        col1m = "#ff3b48"
         colfill = "red"
       }else{
-        col1m = "#1180b8"
+        col1m = "#49afe3"
         colfill = "skyblue"
       }
     }
@@ -306,8 +326,8 @@ server <- function(input, output, session) {
         geom_area(fill = colfill, alpha = 0.2)+
         scale_y_continuous(labels = unit_format(unit = "K", scale = 1e-3))+
         theme(
-          panel.background = element_rect(fill="#f9f6f0"),
-          plot.background = element_rect(fill = "#f9f6f0", color = "#242f39"),
+          panel.background = element_rect(fill='transparent'),
+          plot.background = element_rect(fill = 'transparent', color = 'transparent'),
           panel.grid = element_blank(),
           axis.text = element_text(color = "white", size = 17,face = "bold"),
           axis.text.x = element_blank(),
@@ -341,14 +361,14 @@ server <- function(input, output, session) {
     t6m <- round(((trend6mois[trend6mois$Date == max(trend6mois$Date, na.rm = T),]$Mean - trend6mois[trend6mois$Date == min(trend6mois$Date, na.rm = T),]$Mean)/
                     trend6mois[trend6mois$Date == min(trend6mois$Date, na.rm = T),]$Mean)*100,2)
     if(t6m > 0.1){
-      col6m = "#0f9149"
+      col6m = "#1cd46e"
       colfill = "green"
     }else{
       if(t6m < 0) {
-        col6m = "#eb3440"
+        col6m = "#ff3b48"
         colfill = "red"
       }else{
-        col6m = "#1180b8"
+        col6m = "#49afe3"
         colfill = "skyblue"
       }
     }
@@ -367,8 +387,8 @@ server <- function(input, output, session) {
         geom_area(fill = colfill, alpha = 0.2)+
         scale_y_continuous(labels = unit_format(unit = "K", scale = 1e-3))+
         theme(
-          panel.background = element_rect(fill="#f9f6f0"),
-          plot.background = element_rect(fill = "#f9f6f0", color = "#242f39"),
+          panel.background = element_rect(fill='transparent'),
+          plot.background = element_rect(fill = 'transparent', color = 'transparent'),
           panel.grid = element_blank(),
           axis.text = element_text(color = "white", size = 17,face = "bold"),
           axis.text.x = element_blank(),
@@ -401,14 +421,14 @@ server <- function(input, output, session) {
     tm <- round(((trend[trend$Date == max(trend$Date, na.rm = T),]$Mean - trend[trend$Date == min(trend$Date, na.rm = T),]$Mean)/
                    trend[trend$Date == min(trend$Date, na.rm = T),]$Mean)*100,2)
     if(tm > 0.1){
-      colm = "#0f9149"
+      colm = "#1cd46e"
       colfill = "green"
     }else{
       if(tm < 0) {
-        colm = "#eb3440"
+        colm = "#ff3b48"
         colfill = "red"
       }else{
-        colm = "#1180b8"
+        colm = "#49afe3"
         colfill = "skyblue"
       }
     }
@@ -427,8 +447,8 @@ server <- function(input, output, session) {
         geom_area(fill = colfill, alpha = 0.2)+
         scale_y_continuous(labels = unit_format(unit = "K", scale = 1e-3))+
         theme(
-          panel.background = element_rect(fill="#f9f6f0"),
-          plot.background = element_rect(fill = "#f9f6f0", color = "#242f39"),
+          panel.background = element_rect(fill='transparent'),
+          plot.background = element_rect(fill = 'transparent', color = 'transparent'),
           panel.grid = element_blank(),
           axis.text = element_text(color = "white", size = 17,face = "bold"),
           axis.text.x = element_blank(),
