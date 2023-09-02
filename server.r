@@ -282,7 +282,7 @@ server <- function(input, output, session) {
            background:rgba(36, 47, 57,0);color:blue;position:absolute;bottom:8%;
            left:21%;opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;")
       }else{
-        trend_logo <- tags$i(class = "fa-solid fa-equals fa-beat", style = "font-size:15vw;
+        trend_logo <- tags$i(class = "", style = "font-size:15vw;
            background:rgba(36, 47, 57,0);color:blue;position:absolute;bottom:8%;
            left:21%;opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;")
       }
