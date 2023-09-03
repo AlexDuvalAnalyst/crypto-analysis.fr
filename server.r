@@ -48,14 +48,14 @@ server <- function(input, output, session) {
   })
   
   
-  top_crypto <- setNames(read.csv("data/top_crypto.csv"),c("id","name","symbol","rank","logo"))
+  top_crypto <- setNames(read.csv("top_crypto.csv"),c("id","name","symbol","rank","logo"))
   top_crypto_1 <- top_crypto[top_crypto$rank <= 10,]
   
-  dt <- read.csv("data/data.csv")
+  dt <- read.csv("data.csv")
   dt$Date <- as_datetime(dt$Date)
-  dtmois <- read.csv("data/data_mois.csv")
+  dtmois <- read.csv("data_mois.csv")
   dtmois$Date <- as_datetime(dtmois$Date)
-  dt6mois <- read.csv("data/data_6mois.csv")
+  dt6mois <- read.csv("data_6mois.csv")
   dt6mois$Date <- as_datetime(dt6mois$Date)
   
   
@@ -74,7 +74,7 @@ server <- function(input, output, session) {
                     trend1mois[trend1mois$Date == min(trend1mois$Date, na.rm = T),]$Mean)*100,2)
     if(t1m > 0.1){
       t1micon <- "fa-solid fa-arrow-trend-up fa-beat"
-      col1m = "#44f292"
+      col1m = "#118c00"
       sign <- "+"
     }else{
       if(t1m < 0) {
@@ -92,7 +92,7 @@ server <- function(input, output, session) {
                     trend6mois[trend6mois$Date == min(trend6mois$Date, na.rm = T),]$Mean)*100,2)
     if(t6m > 0.1){
       t6micon <- "fa-solid fa-arrow-trend-up fa-beat"
-      col6m = "#44f292"
+      col6m = "#118c00"
       sign <- "+"
     }else{
       if(t6m < 0){
@@ -110,7 +110,7 @@ server <- function(input, output, session) {
                     trend1an[trend1an$Date == min(trend1an$Date, na.rm = T),]$Mean)*100,2)
     if(t1a > 0.1){
       t1aicon <- "fa-solid fa-arrow-trend-up fa-beat"
-      col1a = "#44f292"
+      col1a = "#118c00"
       sign <- "+"
     }else{
       if(t1a < 0){
@@ -123,7 +123,6 @@ server <- function(input, output, session) {
         sign <- ""
       }
     }
-    
     eval(parse(text = paste(
       "output$",id," <- renderUI({
         tags$div(class = 'info_crypto',tags$p(class = 'nom_crypto','",nom_crypto,"'),
@@ -142,6 +141,7 @@ server <- function(input, output, session) {
       })",sep = ""
     )))
   }
+  
   for(i in c(1:10)){
     k <- 0
     for (j in c(((i*3)-2):(i*3))){
@@ -152,8 +152,7 @@ server <- function(input, output, session) {
     }
   }
   
-  dthist <- read.csv("data/data_hist.csv")
-  
+  dthist <- read.csv("data_hist.csv")
   
   for (i in c(1:20)){
     
@@ -186,6 +185,7 @@ server <- function(input, output, session) {
   }
   
   
+  
   bplot <- function(id_cryp, dthisto) {
     name <- top_crypto[top_crypto$id == id_cryp,]$name
     
@@ -196,7 +196,7 @@ server <- function(input, output, session) {
     p <- ggplot(bt, aes(x = Date, y = Mean))+
       geom_area(size = 1, alpha = 0.08, fill = "#520606") +
       geom_line(size = 1, color = "#ff4f4f",alpha = 0.7) +
-      geom_smooth(method = "loess", span = 0.18, size = 0.8, color = "#49afe3")+
+      geom_smooth(method = "loess", span = 0.18, size = 0.8, color = "green")+
       scale_x_date(date_labels="%Y/%m",
                    breaks = seq(min(bt$Date,na.rm = T),
                                 max(bt$Date, na.rm = T),length.out = 8))+
@@ -210,8 +210,7 @@ server <- function(input, output, session) {
             axis.text.y = element_text(size = 12,color = "white", face = "bold"),
             panel.background = element_rect(fill='transparent'),
             plot.background = element_rect(fill = 'transparent', color = 'transparent'),
-            panel.grid.major = element_line(size = 0, color = "gray80"),
-            panel.grid.minor = element_line(size = 0, color = "gray90"))
+            panel.grid.major = element_blank())
     ggplotly(p)
   }
   
@@ -221,18 +220,21 @@ server <- function(input, output, session) {
     
     br <- dthist[dthist$id == id_cryp,]
     
-    p <- ggplot(br, aes(x = as.factor(substr(Date,6,7)), y = Mean))+geom_boxplot(outlier.shape = NA, aes(fill = as.factor(substr(Date,6,7)), alpha = 0.7))+
-      scale_y_continuous(labels = unit_format(unit = "K", scale = 1e-3))+
-      scale_x_discrete(labels = c("Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Oct","Nov","Dec"))+
-      labs(y = "Price $", title = paste(name," value each month of the year",sep = ""), color = "")+
-      theme_light()+
+    p <- ggplot(br, aes(x = as.factor(substr(Date,6,7)), y = Mean)) +
+      geom_boxplot(aes(fill = as.factor(substr(Date,6,7))), colour = "white", outlier.shape = NA, alpha = 0.7) +
+      scale_y_continuous(labels = unit_format(unit = "K", scale = 1e-3)) +
+      scale_x_discrete(labels = c("Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Oct","Nov","Dec")) +
+      labs(y = "Price $", title = paste(name," value each month of the year",sep = ""), color = "") +
+      theme_light() +
       theme(plot.title = element_text(color = "white", hjust = 0.5, vjust = -7.5, size = 12,face = "bold"),
             axis.title.x = element_blank(),
             axis.title = element_text(size = 12, color = "white", face = "bold"),
             axis.text = element_text(size = 10,color = "white", face = "bold"),
             legend.position = "none",
             panel.background = element_rect(fill='transparent'),
-            plot.background = element_rect(fill = 'transparent', color = 'transparent'))
+            plot.background = element_rect(fill = 'transparent', color = 'transparent'),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank())
     ggplotly(p)
   }
   
@@ -272,19 +274,19 @@ server <- function(input, output, session) {
     
     val <- round(((v2-v1)/v1)*100,1)
     if(val > 0 ){
-      trend_logo <- tags$i(class = "fa-solid fa-arrow-trend-up fa-beat", style = "font-size:15vw;
+      trend_logo <- tags$i(class = "fa-solid fa-arrow-trend-up fa-beat", style = "font-size:12vw;
            background:rgba(36, 47, 57,0);color:blue;position:absolute;bottom:8%;
-           left:21%;opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;")
+           left:25%;opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;")
       
     }else{
       if(val < 0){
-        trend_logo <- tags$i(class = "fa-solid fa-arrow-trend-down fa-beat", style = "font-size:15vw;
+        trend_logo <- tags$i(class = "fa-solid fa-arrow-trend-down fa-beat", style = "font-size:12vw;
            background:rgba(36, 47, 57,0);color:blue;position:absolute;bottom:8%;
-           left:21%;opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;")
+           left:25%;opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;")
       }else{
-        trend_logo <- tags$i(class = "", style = "font-size:15vw;
+        trend_logo <- tags$i(class = "", style = "font-size:12vw;
            background:rgba(36, 47, 57,0);color:blue;position:absolute;bottom:8%;
-           left:21%;opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;")
+           left:25%;opacity:0.5;--fa-animation-duration: 3.8s; --fa-beat-scale: 1.08;")
       }
     }
     return(trend_logo)
