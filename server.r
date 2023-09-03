@@ -48,14 +48,14 @@ server <- function(input, output, session) {
   })
   
   
-  top_crypto <- setNames(read.csv("top_crypto.csv"),c("id","name","symbol","rank","logo"))
+  top_crypto <- setNames(read.csv("data/top_crypto.csv"),c("id","name","symbol","rank","logo"))
   top_crypto_1 <- top_crypto[top_crypto$rank <= 10,]
   
-  dt <- read.csv("data.csv")
+  dt <- read.csv("data/data.csv")
   dt$Date <- as_datetime(dt$Date)
-  dtmois <- read.csv("data_mois.csv")
+  dtmois <- read.csv("data/data_mois.csv")
   dtmois$Date <- as_datetime(dtmois$Date)
-  dt6mois <- read.csv("data_6mois.csv")
+  dt6mois <- read.csv("data/data_6mois.csv")
   dt6mois$Date <- as_datetime(dt6mois$Date)
   
   
@@ -152,7 +152,7 @@ server <- function(input, output, session) {
     }
   }
   
-  dthist <- read.csv("data_hist.csv")
+  dthist <- read.csv("data/data_hist.csv")
   
   for (i in c(1:20)){
     
