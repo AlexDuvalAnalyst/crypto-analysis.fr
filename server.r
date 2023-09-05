@@ -75,16 +75,16 @@ server <- function(input, output, session) {
     if(t1m > 0.1){
       t1micon <- "fa-solid fa-arrow-trend-up fa-beat"
       col1m = "#118c00"
-      sign <- "+"
+      sign1m <- "+"
     }else{
       if(t1m < 0) {
         t1micon <- "fa-solid fa-arrow-trend-down fa-beat"
         col1m = "#ff3b48"
-        sign <- "-"
+        sign1m <- "-"
       }else{
         t1micon <- "fa-solid fa-equals fa-beat"
         col1m = "#49afe3"
-        sign <- ""
+        sign1m <- ""
       }
     }
     trend6mois <- dt6mois[dt6mois$id == top_crypto_1[top_crypto_1$rank == i,]$id,]
@@ -93,16 +93,16 @@ server <- function(input, output, session) {
     if(t6m > 0.1){
       t6micon <- "fa-solid fa-arrow-trend-up fa-beat"
       col6m = "#118c00"
-      sign <- "+"
+      sign6m <- "+"
     }else{
       if(t6m < 0){
         t6micon <- "fa-solid fa-arrow-trend-down fa-beat"
         col6m = "#ff3b48"
-        sign <- "-"
+        sign6m <- "-"
       }else{
         t6micon <- "fa-solid fa-equals fa-beat"
         col6m = "#49afe3"
-        sign <- ""
+        sign6m <- ""
       }
     }
     trend1an <- dt[dt$id == top_crypto_1[top_crypto_1$rank == i,]$id,]
@@ -111,16 +111,16 @@ server <- function(input, output, session) {
     if(t1a > 0.1){
       t1aicon <- "fa-solid fa-arrow-trend-up fa-beat"
       col1a = "#118c00"
-      sign <- "+"
+      sign1a <- "+"
     }else{
       if(t1a < 0){
         t1aicon <- "fa-solid fa-arrow-trend-down fa-beat"
         col1a = "#ff3b48"
-        sign <- "-"
+        sign1a <- "-"
       }else{
         t1aicon <- "fa-solid fa-equals fa-beat"
         col1a = "#49afe3"
-        sign <- ""
+        sign1a <- ""
       }
     }
     eval(parse(text = paste(
